@@ -1,0 +1,102 @@
+-- WARNING: This script is for educational purposes only.
+-- Using cheats or hacks in games can result in bans or other penalties.
+-- Always respect game rules and terms of service.
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local RootPart = Character:WaitForChild("HumanoidRootPart")
+
+-- Settings
+local AutoStealEnabled = true
+local NoclipEnabled = true
+local BrainrotSpawnerEnabled = true
+local AutoLockBaseEnabled = true
+local SpeedHackEnabled = true
+local JumpHackEnabled = true
+
+local SpeedMultiplier = 2
+local JumpPowerMultiplier = 2
+
+-- Noclip
+RunService.Stepped:Connect(function()
+    if NoclipEnabled then
+        for _, part in pairs(Character:GetChildren()) do
+            if part:IsA("BasePart") and part.CanCollide then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+-- Speed and Jump Hack
+Humanoid.WalkSpeed = 16 * SpeedMultiplier
+Humanoid.JumpPower = 50 * JumpPowerMultiplier
+
+-- Auto Steal Brainrot
+if AutoStealEnabled then
+    spawn(function()
+        while wait(1) do
+            for _, obj in pairs(workspace:GetChildren()) do
+                if obj.Name:lower():find("brainrot") and obj:IsA("BasePart") then
+                    local dist = (RootPart.Position - obj.Position).Magnitude
+                    if dist < 50 then
+                        RootPart.CFrame = CFrame.new(obj.Position + Vector3.new(0, 3, 0))
+                        wait(0.5)
+                        firetouchinterest(RootPart, obj, 0)
+                        firetouchinterest(RootPart, obj, 1)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- Brainrot Spawner
+if BrainrotSpawnerEnabled then
+    spawn(function()
+        while wait(10) do
+            local brainrot = Instance.new("Part")
+            brainrot.Name = "Brainrot"
+            brainrot.Size = Vector3.new(2,2,2)
+            brainrot.Position = RootPart.Position + Vector3.new(math.random(-10,10), 5, math.random(-10,10))
+            brainrot.Anchored = false
+            brainrot.CanCollide = true
+            brainrot.Parent = workspace
+            local mesh = Instance.new("SpecialMesh", brainrot)
+            mesh.MeshType = Enum.MeshType.Sphere
+            mesh.Scale = Vector3.new(2,2,2)
+            brainrot.BrickColor = BrickColor.new("Bright purple")
+        end
+    end)
+end
+
+-- Auto Lock Base (Assuming base parts named "BaseLock")
+if AutoLockBaseEnabled then
+    spawn(function()
+        while wait(5) do
+            for _, basePart in pairs(workspace:GetChildren()) do
+                if basePart.Name == "BaseLock" and basePart:IsA("BasePart") then
+                    basePart.Locked = true
+                end
+            end
+        end
+    end)
+end
+
+-- Speed and Jump Hack Update Loop
+RunService.Heartbeat:Connect(function()
+    if SpeedHackEnabled then
+        Humanoid.WalkSpeed = 16 * SpeedMultiplier
+    else
+        Humanoid.WalkSpeed = 16
+    end
+    if JumpHackEnabled then
+        Humanoid.JumpPower = 50 * JumpPowerMultiplier
+    else
+        Humanoid.JumpPower = 50
+    end
+end)
